@@ -17,14 +17,11 @@
 
 #include "asio/detail/config.hpp"
 #include <cstddef>
-
-#if defined(XSTD_EXPERIMENTAL) && (__cplusplus >= 201402L)
-#include <expected.hpp>
-#endif // defined(XSTD_EXPERIMENTAL) && (__cplusplus >= 201402L)
-
 #include "asio/async_result.hpp"
 #include "asio/buffer.hpp"
 #include "asio/error.hpp"
+
+#include "asio/expected_result.hpp"
 
 #if !defined(ASIO_NO_EXTENSIONS)
 # include "asio/basic_streambuf_fwd.hpp"
@@ -34,9 +31,6 @@
 
 namespace asio {
 
-#if defined(XSTD_EXPERIMENTAL) && (__cplusplus > 201402L)
-  using expected_result = xstd::expected<std::size_t, asio::error_code>;
-#endif // defined(XSTD_EXPERIMENTAL) && (__cplusplus >= 201402L)
 /**
  * @defgroup read asio::read
  *
