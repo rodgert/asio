@@ -17,6 +17,11 @@
 
 #include "asio/detail/config.hpp"
 #include <cstddef>
+
+#if defined(XSTD_EXPERIMENTAL) && (__cplusplus >= 201402L)
+#include <expected.hpp>
+#endif // defined(XSTD_EXPERIMENTAL) && (__cplusplus >= 201402L)
+
 #include "asio/async_result.hpp"
 #include "asio/buffer.hpp"
 #include "asio/error.hpp"
@@ -29,6 +34,9 @@
 
 namespace asio {
 
+#if defined(XSTD_EXPERIMENTAL) && (__cplusplus > 201402L)
+  using expected_result = xstd::expected<std::size_t, asio::error_code>;
+#endif // defined(XSTD_EXPERIMENTAL) && (__cplusplus >= 201402L)
 /**
  * @defgroup read asio::read
  *
@@ -121,6 +129,15 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
     typename enable_if<
       is_mutable_buffer_sequence<MutableBufferSequence>::value
     >::type* = 0);
+
+#if defined(XSTD_EXPERIMENTAL) && (__cplusplus > 201402L)
+template <typename SyncReadStream, typename MutableBufferSequence>
+expected_result read(SyncReadStream& s, const MutableBufferSequence& buffers,
+                     std::nothrow_t,
+                     typename enable_if<
+                       is_mutable_buffer_sequence<MutableBufferSequence>::value
+                     >::type* = 0);
+#endif // defined(XSTD_EXPERIMENTAL) && (__cplusplus > 201402L)
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**

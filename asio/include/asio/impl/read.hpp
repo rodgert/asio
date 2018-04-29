@@ -20,6 +20,7 @@
 #include "asio/associated_executor.hpp"
 #include "asio/buffer.hpp"
 #include "asio/completion_condition.hpp"
+#include "asio/expected_result.hpp"
 #include "asio/detail/array_fwd.hpp"
 #include "asio/detail/base_from_completion_cond.hpp"
 #include "asio/detail/bind_handler.hpp"
@@ -82,6 +83,23 @@ inline std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
   asio::detail::throw_error(ec, "read");
   return bytes_transferred;
 }
+
+#if defined(XSTD_EXPERIMENTAL) && (__cplusplus > 201402L)
+template <typename SyncReadStream, typename MutableBufferSequence>
+inline expected_result read(SyncReadStream& s, const MutableBufferSequence& buffers,
+                     std::nothrow_t,
+                     typename enable_if<
+                     is_mutable_buffer_sequence<MutableBufferSequence>::value
+                     >::type*)
+{
+  asio::error_code ec;
+  auto const res = read(s, buffers, ec);
+  if (ec)
+    return ec;
+  return res;
+}
+
+#endif // defined(XSTD_EXPERIMENTAL) && (__cplusplus > 201402L)
 
 template <typename SyncReadStream, typename MutableBufferSequence>
 inline std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,

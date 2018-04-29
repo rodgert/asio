@@ -33,6 +33,17 @@ AC_ARG_WITH(boost,
   fi
 ])
 
+AC_ARG_WITH(xstd,
+  AC_HELP_STRING([--with-xstd=DIR],[location of experimental standard headers]),
+[
+  if test "${withval}" = no; then
+    EXPERIMENTAL="no"
+  else
+    CPPFLAGS="$CPPFLAGS -I${withval} -DXSTD_EXPERIMENTAL -std=c++17"
+    EXPERIMENTAL="yes"
+  fi
+])
+
 AC_ARG_ENABLE(separate-compilation,
 [  --enable-separate-compilation  separate compilation of asio source],
 [
